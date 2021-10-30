@@ -6,7 +6,17 @@
 typedef FILE* plik;
 
 
+void print_MENU(void){
+    printf("\t\tMENU\n\n");
+    printf("1. Generuj sygnal\n");
+    printf("2. Rysuj wykres\n");
+    printf("3. Zapisz sygnal do pliku txt\n");
+    printf("4. Wczytaj sygnal z pliku\n");
+    printf("5. Odszumiaj\n");
+    printf("6. Zakoncz\n");
+    printf("Twoj wybor: ");
 
+}
 float** Gen_sin(int, float, float, float);  //prototyp(N, tp, amplituda, okres)
 void RysujWykres(float**, int, char*); //prototyp
 
@@ -16,123 +26,130 @@ int main(void){
 //    N to dlugosc wykresu na osi X
     float** tab = NULL;
     float tp = 0.01;
-
-    printf("\t\tMENU\n\n");
-    printf("1. Generuj sygnal\n");
-    printf("2. Rysuj wykres\n");
-    printf("3. Zapisz sygnal do pliku txt\n");
-    printf("4. Wczytaj sygnal z pliku\n");
-    printf("5. Odszumiaj\n");
-    printf("6. Zakoncz\n");
-
     int wybor;
-    printf("Twoj wybor: ");
-    scanf("%d", &wybor);
+    float amplituda = 0;
+    float okres = 0;
 
-    switch (wybor)
-    {
-        case 1:
-        {
-            system("cls");
-            printf("Podaj parametry sygnalu.\n");
-            float amplituda = 0;
-            float okres = 0;
-            printf("Amplituda: ");
-            scanf("%f", &amplituda);
-            printf("\nDlugosc okresu: ");
-            scanf("%f", &okres);
-            tab = Gen_sin(N, 0.01, amplituda, okres); //przyporzadkowywanie tablicy otrzymanych danych z generatora sinusa, 0.1 to zmienna utworzona do rozdzielczosci X, wykres rosnie i maleje w punktach co 0.1
-            RysujWykres(tab, N, "wykres.html"); //wywołanie funkcji
-            system("wykres.html"); //uruchomienie wykresu
-            break;
-        }
-        case 2:
-        {
-            RysujWykres(tab, N, "wykres.html"); //wywołanie funkcji
-            system("wykres.html"); //uruchomienie wykresu
-            break;
-        }
-        case 3:
-        {
-            //for gen new sin
-            system("cls");
-            printf("Podaj parametry sygnalu.\n");
-            float amplituda = 0;
-            float okres = 0;
-            printf("Amplituda: ");
-            scanf("%f", &amplituda);
-            printf("\nDlugosc okresu: ");
-            scanf("%f", &okres);
-            tab = Gen_sin(N, 0.01, amplituda, okres); //przyporzadkowywanie tablicy otrzymanych danych z generatora sinusa, 0.1 to zmienna utworzona do rozdzielczosci X, wykres rosnie i maleje w punktach co 0.1
+    char szum;
 
-            //       maybe if with statement checking if sin was generated
-            plik fp = fopen("wykres.txt", "w");
-            if (fp  == NULL) {
-                printf("nie moge otworzyc pliku wykres.txt do zapisu danych");
-                exit(1);
-            }
-            else {
-                for (int i = 0; i < N; i++) {
-                    fprintf(fp, "%f\n", tab[0][i]);
-                }
-                fprintf(fp,"Y\n");
-                for (int i = 0; i < N; i++){
-                    fprintf(fp, "%f\n", tab[1][i]);
-                }
-                fclose(fp);
-            }
-            break;
-        }
-        case 4:
+    while(wybor != 6){
+        print_MENU();
+        scanf("%d", &wybor);
+        switch (wybor)
         {
-            plik fp = fopen("wykres.txt","r");
-            if(fp == NULL){
-                printf("nie udalo sie wczytac pliku");
-                exit(-1);
-            }
-            else{
-                float x_v[N];
-                float y_v[N];
-                for (int i = 0; i<N;i++) {
-                    fscanf(fp, "%f", &(x_v[i]));
-//                    printf("%f ",x_v[i]);
-                }
-                char s[] ="";
-                fscanf(fp,"%s",&s);
-                for (int i = 0; i<N;i++){
-                    fscanf(fp,"%f",&(y_v[i]));
-//                    printf("%f ",y_v[i]);
-                }
-                tab = calloc(sizeof(float*), 2);        // 2 bo x i y
-                tab[0] = x_v;
-                tab[1] = y_v;
+            case 1:
+            {
                 system("cls");
-                RysujWykres(tab, N, "wykres.html"); //wywołanie funkcji
-                system("wykres.html"); //uruchomienie wykresu
-                fclose(fp);
+                printf("Podaj parametry sygnalu.\n");
+                printf("Amplituda: ");
+                scanf("%f", &amplituda);
+                printf("\nDlugosc okresu: ");
+                scanf("%f", &okres);
+//                czyszczenie bufora ???
+//                printf("dodac szum ? Y/n :");
+//                flushall();
+//                scanf("%c",&szum);
+////                generuje tab dla innych przypadków
+//
+//                if(szum == "Y"){
+////                    zaszum
+//                }
+//                else if(szum == "n"){
+////                    nie zaszumiaj
+//                    tab = Gen_sin(N, 0.01, amplituda, okres);
+//                }
+//                else{
+//                    printf("nie rozpoznano wejscia, sproboj ponownie");
+//                    break;
+//                }
+                tab = Gen_sin(N, 0.01, amplituda, okres);
+                break;
             }
-            break;
-        }
-        case 5:
-        {
-            //funikcja
-            break;
-        }
-        case 6:
-        {
-//            roboczo 6 zaszumia
-            //funikcja
-            break;
+            case 2:
+            {
+                if(tab != NULL){
+                    RysujWykres(tab, N, "wykres.html"); //wywołanie funkcji
+                    system("wykres.html"); //uruchomienie wykresu
+                }
+                else{
+                    printf("wygeneruj sygnal lub wczytaj go z pliku");
+                }
+                break;
+            }
+            case 3:
+            {
+                //for gen new sin
+                system("cls");
+                printf("Podaj parametry sygnalu.\n");
+                float amplituda = 0;
+                float okres = 0;
+                printf("Amplituda: ");
+                scanf("%f", &amplituda);
+                printf("\nDlugosc okresu: ");
+                scanf("%f", &okres);
+                tab = Gen_sin(N, 0.01, amplituda, okres); //przyporzadkowywanie tablicy otrzymanych danych z generatora sinusa, 0.1 to zmienna utworzona do rozdzielczosci X, wykres rosnie i maleje w punktach co 0.1
+
+                //       maybe if with statement checking if sin was generated
+                plik fp = fopen("wykres.txt", "w");
+                if (fp  == NULL) {
+                    printf("nie moge otworzyc pliku wykres.txt do zapisu danych");
+                    exit(1);
+                }
+                else {
+                    for (int i = 0; i < N; i++) {
+                        fprintf(fp, "%f\n", tab[0][i]);
+                    }
+                    fprintf(fp,"Y\n");
+                    for (int i = 0; i < N; i++){
+                        fprintf(fp, "%f\n", tab[1][i]);
+                    }
+                    fclose(fp);
+                }
+                break;
+            }
+            case 4:
+            {
+                plik fp = fopen("wykres.txt","r");
+                if(fp == NULL){
+                    printf("nie udalo sie wczytac pliku");
+                    exit(-1);
+                }
+                else{
+                    float x_v[N];
+                    float y_v[N];
+                    for (int i = 0; i<N;i++) {
+                        fscanf(fp, "%f", &(x_v[i]));
+//                    printf("%f ",x_v[i]);
+                    }
+                    char s[] ="";
+                    fscanf(fp,"%s",&s);
+                    for (int i = 0; i<N;i++){
+                        fscanf(fp,"%f",&(y_v[i]));
+//                    printf("%f ",y_v[i]);
+                    }
+                    tab = calloc(sizeof(float*), 2);        // 2 bo x i y
+                    tab[0] = x_v;
+                    tab[1] = y_v;
+                    system("cls");
+                    RysujWykres(tab, N, "wykres.html"); //wywołanie funkcji
+                    system("wykres.html"); //uruchomienie wykresu
+                    fclose(fp);
+                }
+                break;
+            }
+            case 5:
+            {
+                //funikcja odszumiająca
+                break;
+            }
+            case 6:
+            {
+                return EXIT_SUCCESS;
+            }
         }
     }
-    return 0;
+    return EXIT_SUCCESS;
 }
-
-
-
-
-
-
 float** Gen_sin(int N, float tp, float amplituda, float okres) {
     // tp to rozdzielczosc jaka widzimy na wykresie X i Y co 0,1
     float** tab_sin;                //tworzenie nowej dynamicznej tablicy wskaznikow
@@ -154,8 +171,6 @@ float** Gen_sin(int N, float tp, float amplituda, float okres) {
     }
     return tab_sin;
 }
-
-
 
 void RysujWykres(float** dane, int l_linii, char* nazwa) {
 
