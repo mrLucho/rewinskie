@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-//#include "rewinskie.h"
 #define pi 3.1415
 typedef FILE* plik;
 
@@ -10,7 +9,6 @@ typedef FILE* plik;
 
 float** Gen_sin(int, float, float, float);  //prototyp(N, tp, amplituda, okres)
 void RysujWykres(float**, int, char*); //prototyp
-float ** wczytaj_z_pliku(plik file,int N);
 
 int main(void){
     int i = 400;
@@ -56,9 +54,7 @@ int main(void){
         }
         case 3:
         {
-
             //for gen new sin
-
             system("cls");
             printf("Podaj parametry sygnalu.\n");
             float amplituda = 0;
@@ -84,10 +80,8 @@ int main(void){
                     fprintf(fp, "%f\n", tab[1][i]);
                 }
                 fclose(fp);
-
             }
             break;
-
         }
         case 4:
         {
@@ -117,10 +111,6 @@ int main(void){
                 system("wykres.html"); //uruchomienie wykresu
                 fclose(fp);
             }
-//            tab = wczytaj_z_pliku(fp,N);
-//            RysujWykres(tab, N, "wykres.html"); //wywołanie funkcji
-//            system("wykres.html"); //uruchomienie wykresu
-
             break;
         }
         case 5:
@@ -134,13 +124,12 @@ int main(void){
             //funikcja
             break;
         }
-
-            break;
-
     }
-
     return 0;
 }
+
+
+
 
 
 
@@ -149,13 +138,10 @@ float** Gen_sin(int N, float tp, float amplituda, float okres) {
     float** tab_sin;                //tworzenie nowej dynamicznej tablicy wskaznikow
     int i;
 
-
-
     tab_sin = calloc(sizeof(float*), 2);        // 2 bo x i y
     for (i = 0; i < 2; i++) {
         tab_sin[i] = calloc(sizeof(float), N); //tworzenie tablicy dwuwymiarowej
     }
-
 
     for (i = 0; i < N; i++) {       //wpisywanie wartosci do tej tablicy
         tab_sin[0][i] = tp * i;   //przypisywanie kolejnych wartosci X
@@ -166,8 +152,6 @@ float** Gen_sin(int N, float tp, float amplituda, float okres) {
             tab_sin[1][i] = 0; //i to x
         }
     }
-
-
     return tab_sin;
 }
 
