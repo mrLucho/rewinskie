@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <math.h>
 #define pi 3.1415
+#include <time.h>
 typedef FILE* plik;
 
 
@@ -19,7 +20,7 @@ void print_MENU(void){
 }
 float** Gen_sin(int, float, float, float);  //prototyp(N, tp, amplituda, okres)
 void RysujWykres(float**, int, char*); //prototyp
-
+float * gen_szum(int N,float amplituda);
 int main(void){
     int i = 400;
     int N = 400;
@@ -46,23 +47,31 @@ int main(void){
                 printf("\nDlugosc okresu: ");
                 scanf("%f", &okres);
 //                czyszczenie bufora ???
-//                printf("dodac szum ? Y/n :");
-//                flushall();
-//                scanf("%c",&szum);
-////                generuje tab dla innych przypadków
-//
-//                if(szum == "Y"){
-////                    zaszum
-//                }
-//                else if(szum == "n"){
-////                    nie zaszumiaj
-//                    tab = Gen_sin(N, 0.01, amplituda, okres);
-//                }
-//                else{
-//                    printf("nie rozpoznano wejscia, sproboj ponownie");
-//                    break;
-//                }
-                tab = Gen_sin(N, 0.01, amplituda, okres);
+                printf("dodac szum ? Y/n :");
+//                podwójne scanfy działaja
+                scanf("%c",&szum);
+                scanf("%c",&szum);
+
+//                generuje tab dla innych przypadków
+
+                if(szum == 'Y'){
+                    srand(time(NULL));
+//                    zaszum
+                    tab = Gen_sin(N, 0.01, amplituda, okres);
+                    float * tablica_szumu = gen_szum(N,amplituda);
+                    for (int i = 0;i<N;i++){
+                        tab[1][i] = Gen_sin(N,0.01,amplituda,okres)[1][i] + tablica_szumu[i];
+                    }
+                }
+                else if(szum == 'n'){
+//                    nie zaszumiaj
+                    tab = Gen_sin(N, 0.01, amplituda, okres);
+                }
+                else{
+                    printf("nie rozpoznano wejscia, sproboj ponownie");
+                    break;
+                }
+//                tab = Gen_sin(N, 0.01, amplituda, okres);
                 break;
             }
             case 2:
@@ -171,7 +180,17 @@ float** Gen_sin(int N, float tp, float amplituda, float okres) {
     }
     return tab_sin;
 }
-
+float * gen_szum(int N,float amplituda){
+    float * szum = calloc(sizeof(float),N);
+    if(szum == NULL){
+        printf("nie udalo sie zaalokowac pamieci");
+        return EXIT_FAILURE;
+    }
+    int szum_graniczny = amplituda;
+    for(int i=0;i<N;i++){
+        szum[i] = rand() % szum_graniczny - amplituda/10;
+    }
+}
 void RysujWykres(float** dane, int l_linii, char* nazwa) {
 
 
