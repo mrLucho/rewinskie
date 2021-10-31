@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/rewinskie.dir/main.c.obj"
+  "CMakeFiles/rewinskie.dir/rewinskie.c.obj"
   "librewinskie.dll.a"
   "rewinskie.exe"
   "rewinskie.exe.manifest"

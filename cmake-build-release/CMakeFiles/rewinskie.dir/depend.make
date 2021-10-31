@@ -3,3 +3,6 @@
 
 CMakeFiles/rewinskie.dir/main.c.obj: \
  ../main.c
+CMakeFiles/rewinskie.dir/rewinskie.c.obj: \
+ ../rewinskie.c \
+ ../rewinskie.h

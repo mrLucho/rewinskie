@@ -152,6 +152,30 @@ main.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\rewinskie.dir\build.make CMakeFiles/rewinskie.dir/main.c.s
 .PHONY : main.c.s
 
+rewinskie.obj: rewinskie.c.obj
+.PHONY : rewinskie.obj
+
+# target to build an object file
+rewinskie.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\rewinskie.dir\build.make CMakeFiles/rewinskie.dir/rewinskie.c.obj
+.PHONY : rewinskie.c.obj
+
+rewinskie.i: rewinskie.c.i
+.PHONY : rewinskie.i
+
+# target to preprocess a source file
+rewinskie.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\rewinskie.dir\build.make CMakeFiles/rewinskie.dir/rewinskie.c.i
+.PHONY : rewinskie.c.i
+
+rewinskie.s: rewinskie.c.s
+.PHONY : rewinskie.s
+
+# target to generate assembly for a file
+rewinskie.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\rewinskie.dir\build.make CMakeFiles/rewinskie.dir/rewinskie.c.s
+.PHONY : rewinskie.c.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -164,6 +188,9 @@ help:
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
+	@echo ... rewinskie.obj
+	@echo ... rewinskie.i
+	@echo ... rewinskie.s
 .PHONY : help
 
 
