@@ -1,37 +1,32 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include <math.h>       // for sin function
 #define pi 3.1415
-#include <time.h>
-typedef FILE* plik;
+#include <time.h>       // for rand() %
+#include <synchapi.h>   //sleep
 
+typedef FILE* plik;     // for reading and saving file
 
-void print_MENU(void){
-    printf("\t\tMENU\n\n");
-    printf("1. Generuj sygnal\n");
-    printf("2. Rysuj wykres\n");
-    printf("3. Zapisz sygnal do pliku txt\n");
-    printf("4. Wczytaj sygnal z pliku\n");
-    printf("5. Odszumiaj\n");
-    printf("6. Zakoncz\n");
-    printf("Twoj wybor: ");
-
-}
-float** Gen_sin(int, float, float, float);  //prototyp(N, tp, amplituda, okres)
-void RysujWykres(float**, int, char*); //prototyp
+void print_MENU(void);
+float** Gen_sin(int N, float tp, float amplituda, float okres);
+void RysujWykres(float**, int, char*);
 float * gen_szum(int N,float amplituda);
+float** usun_szum(float ** tab,float *tab_szum,int N);
+
 int main(void){
+
+//  deklaracje zmiennych
     int i = 400;
     int N = 400;
-//    N to dlugosc wykresu na osi X
     float** tab = NULL;
     float tp = 0.01;
     int wybor;
     float amplituda = 0;
     float okres = 0;
-
+    float * tablica_szumu = NULL;
     char szum;
+//  koniec zmiennych
 
     while(wybor != 6){
         print_MENU();
@@ -40,27 +35,32 @@ int main(void){
         {
             case 1:
             {
+                char smieci;
                 system("cls");
                 printf("Podaj parametry sygnalu.\n");
+
                 printf("Amplituda: ");
                 scanf("%f", &amplituda);
+
                 printf("\nDlugosc okresu: ");
                 scanf("%f", &okres);
+
 //                czyszczenie bufora ???
                 printf("dodac szum ? Y/n :");
 //                podwójne scanfy działaja
+                scanf("%c",&smieci);
                 scanf("%c",&szum);
-                scanf("%c",&szum);
-
-//                generuje tab dla innych przypadków
 
                 if(szum == 'Y'){
-                    srand(time(NULL));
 //                    zaszum
                     tab = Gen_sin(N, 0.01, amplituda, okres);
-                    float * tablica_szumu = gen_szum(N,amplituda);
+                    tablica_szumu = gen_szum(N,amplituda);
+                    if(tablica_szumu == NULL){
+                        printf("nie udalo sie zaalokowac pamieci");
+                        return EXIT_FAILURE;
+                    }
                     for (int i = 0;i<N;i++){
-                        tab[1][i] = Gen_sin(N,0.01,amplituda,okres)[1][i] + tablica_szumu[i];
+                        tab[1][i] = tab[1][i] + tablica_szumu[i];
                     }
                 }
                 else if(szum == 'n'){
@@ -71,11 +71,11 @@ int main(void){
                     printf("nie rozpoznano wejscia, sproboj ponownie");
                     break;
                 }
-//                tab = Gen_sin(N, 0.01, amplituda, okres);
                 break;
             }
             case 2:
             {
+//                TODO: oś na wykresie od Wołczeckiej
                 if(tab != NULL){
                     RysujWykres(tab, N, "wykres.html"); //wywołanie funkcji
                     system("wykres.html"); //uruchomienie wykresu
@@ -85,19 +85,7 @@ int main(void){
                 }
                 break;
             }
-            case 3:
-            {
-                //for gen new sin
-                system("cls");
-                printf("Podaj parametry sygnalu.\n");
-                float amplituda = 0;
-                float okres = 0;
-                printf("Amplituda: ");
-                scanf("%f", &amplituda);
-                printf("\nDlugosc okresu: ");
-                scanf("%f", &okres);
-                tab = Gen_sin(N, 0.01, amplituda, okres); //przyporzadkowywanie tablicy otrzymanych danych z generatora sinusa, 0.1 to zmienna utworzona do rozdzielczosci X, wykres rosnie i maleje w punktach co 0.1
-
+            case 3:{
                 //       maybe if with statement checking if sin was generated
                 plik fp = fopen("wykres.txt", "w");
                 if (fp  == NULL) {
@@ -113,11 +101,11 @@ int main(void){
                         fprintf(fp, "%f\n", tab[1][i]);
                     }
                     fclose(fp);
+                    printf("zapisano sygnal do pliku");
                 }
                 break;
             }
-            case 4:
-            {
+            case 4:{
                 plik fp = fopen("wykres.txt","r");
                 if(fp == NULL){
                     printf("nie udalo sie wczytac pliku");
@@ -130,7 +118,7 @@ int main(void){
                         fscanf(fp, "%f", &(x_v[i]));
 //                    printf("%f ",x_v[i]);
                     }
-                    char s[] ="";
+                    char s;
                     fscanf(fp,"%s",&s);
                     for (int i = 0; i<N;i++){
                         fscanf(fp,"%f",&(y_v[i]));
@@ -139,25 +127,40 @@ int main(void){
                     tab = calloc(sizeof(float*), 2);        // 2 bo x i y
                     tab[0] = x_v;
                     tab[1] = y_v;
-                    system("cls");
-                    RysujWykres(tab, N, "wykres.html"); //wywołanie funkcji
-                    system("wykres.html"); //uruchomienie wykresu
                     fclose(fp);
                 }
                 break;
             }
-            case 5:
-            {
+            case 5:{
                 //funikcja odszumiająca
+                tab = usun_szum(tab,tablica_szumu,N);
+                if(tab == NULL){
+                    printf("blad przy alokacji pamieci");
+                }
+//                to chyba tyle
                 break;
             }
-            case 6:
-            {
+            case 6:{
                 return EXIT_SUCCESS;
+            }
+            default:{
+                printf("Nie ma takiej opcji w MENU\n");
+                Sleep(2000);
             }
         }
     }
     return EXIT_SUCCESS;
+}
+
+float ** usun_szum(float ** tab,float * tab_szum,int N){
+//    or
+    if (tab == NULL || tab_szum == NULL){
+        return NULL;
+    }
+    for (int i=0; i<N;i++){
+        tab[1][i] = tab[1][i] - tab_szum[i];
+    }
+    return tab;
 }
 float** Gen_sin(int N, float tp, float amplituda, float okres) {
     // tp to rozdzielczosc jaka widzimy na wykresie X i Y co 0,1
@@ -181,15 +184,17 @@ float** Gen_sin(int N, float tp, float amplituda, float okres) {
     return tab_sin;
 }
 float * gen_szum(int N,float amplituda){
+    srand(time(NULL));
     float * szum = calloc(sizeof(float),N);
     if(szum == NULL){
         printf("nie udalo sie zaalokowac pamieci");
-        return EXIT_FAILURE;
+        return NULL;
     }
     int szum_graniczny = amplituda;
-    for(int i=0;i<N;i++){
-        szum[i] = rand() % szum_graniczny - amplituda/10;
+    for(int i=0;i<N+1;i++){
+        szum[i] = (rand() % szum_graniczny)/5 - amplituda/10;
     }
+    return szum;
 }
 void RysujWykres(float** dane, int l_linii, char* nazwa) {
 
@@ -245,4 +250,15 @@ void RysujWykres(float** dane, int l_linii, char* nazwa) {
 
 
     fclose(Wsk_do_pliku);
+}
+void print_MENU(void){
+    printf("\t\tMENU\n\n");
+    printf("1. Generuj sygnal\n");
+    printf("2. Rysuj wykres\n");
+    printf("3. Zapisz sygnal do pliku txt\n");
+    printf("4. Wczytaj sygnal z pliku\n");
+    printf("5. Odszumiaj\n");
+    printf("6. Zakoncz\n");
+    printf("\nTwoj wybor: ");
+
 }
