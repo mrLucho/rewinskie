@@ -1,3 +1,0 @@
-C:\Users\micha\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\212.5457.51\bin\cmake\win\bin\cmake.exe -E rm -f CMakeFiles\rewinskie.dir/objects.a
-C:\PROGRA~1\MINGW-~1\X86_64~1.0-P\mingw64\bin\ar.exe cr CMakeFiles\rewinskie.dir/objects.a @CMakeFiles\rewinskie.dir\objects1.rsp
-C:\PROGRA~1\MINGW-~1\X86_64~1.0-P\mingw64\bin\gcc.exe -O3 -DNDEBUG -Wl,--whole-archive CMakeFiles\rewinskie.dir/objects.a -Wl,--no-whole-archive -o rewinskie.exe -Wl,--out-implib,librewinskie.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\rewinskie.dir\linklibs.rsp

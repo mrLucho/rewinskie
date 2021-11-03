@@ -1,3 +1,0 @@
-C:/Users/micha/CLionProjects/rewinskie/cmake-build-release/CMakeFiles/rewinskie.dir
-C:/Users/micha/CLionProjects/rewinskie/cmake-build-release/CMakeFiles/edit_cache.dir
-C:/Users/micha/CLionProjects/rewinskie/cmake-build-release/CMakeFiles/rebuild_cache.dir
