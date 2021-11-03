@@ -4,7 +4,7 @@
 #include <math.h>       // for sin function
 #define pi 3.1415
 #include <time.h>       // for rand() %
-#include <synchapi.h>   //sleep
+// #include <synchapi.h>   //sleep
 
 typedef FILE* plik;     // for reading and saving file
 
@@ -145,7 +145,7 @@ int main(void){
             }
             default:{
                 printf("Nie ma takiej opcji w MENU\n");
-                Sleep(2000);
+                // Sleep(2000);
             }
         }
     }
